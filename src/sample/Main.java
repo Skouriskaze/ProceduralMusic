@@ -33,6 +33,7 @@ public class Main extends Application {
         Score r = new Score();
         Part p = new Part();
         Phrase ph = new Phrase();
+        r.setTempo(120);
         //------------
         ph.addNote(JMC.C4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
