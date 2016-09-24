@@ -29,7 +29,7 @@ public interface RiffModel {
     /**
      * Places the current note.
      */
-    void eventDneterPressed();
+    void eventEnterPressed();
     /**
      * Gets the user-defined riff
      * @return the score of the user's rift
