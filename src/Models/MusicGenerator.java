@@ -31,14 +31,14 @@ public class MusicGenerator implements JMC {
         Score bass = sRoot.copy();
         Phrase phOld = sRoot.getPart(0).getPhrase(0);
         phOld.setTitle("root");
-        Phrase phBass = addBassLine(bass, phOld, 2);
+        Phrase phBass = addBassLine(bass, phOld, 2).getPhrase(0);
         addOctaveBaseLine(bass, phBass);
 //        addRandomBass(bass, 2);
         addHighHarmony(bass, phOld);
         aIterations.add(bass);
     }
 
-    private Phrase addRandomBass(Score s, int nOctave) {
+    private Part addRandomBass(Score s, int nOctave) {
         Part pBass = new Part("randombass");
         Phrase phBass = new Phrase("randombass");
         Random rand = new Random();
@@ -55,13 +55,12 @@ public class MusicGenerator implements JMC {
         return phBass;
     }
 
-
     /**
      * Adds the higher harmony to a phrase
      * @param s Score to add a phrase to
      * @param phOld the original phrase
      */
-    private Phrase addHighHarmony(Score s, Phrase phOld) {
+    private Part addHighHarmony(Score s, Phrase phOld) {
         Part pHarmony = new Part("highharmony");
         Phrase phHarmony = new Phrase("highharmony");
 
@@ -80,7 +79,7 @@ public class MusicGenerator implements JMC {
         pHarmony.add(phHarmony);
         s.add(pHarmony);
 
-        return phHarmony;
+        return pHarmony;
     }
 
     /**
@@ -89,7 +88,7 @@ public class MusicGenerator implements JMC {
      * @param phOld Original phrase
      * @param nOctaves The number of octaves to drop (0 is the same)
      */
-    private Phrase addBassLine(Score s, Phrase phOld, int nOctaves) {
+    private Part addBassLine(Score s, Phrase phOld, int nOctaves) {
 
         Part pBass = new Part("bassline");
         Phrase phBass = new Phrase("bassline");
@@ -111,7 +110,7 @@ public class MusicGenerator implements JMC {
         pBass.add(phBass);
         s.add(pBass);
 
-        return phBass;
+        return pBass;
     }
 
     /**
@@ -120,7 +119,7 @@ public class MusicGenerator implements JMC {
      * @param phOld The bass line
      * @return Returns the alternating pattern
      */
-    private Phrase addOctaveBaseLine(Score s, Phrase phOld) {
+    private Part addOctaveBaseLine(Score s, Phrase phOld) {
         Part pBass = new Part("octavebaseline");
         Phrase phBass = new Phrase("octavebaseline");
 
@@ -149,7 +148,14 @@ public class MusicGenerator implements JMC {
         pBass.add(phBass);
         s.add(pBass);
 
-        return phBass;
+        return pBass;
+    }
+
+    private Part addDrumLine(Score s) {
+        Part pDrum = new Part("drumline");
+        Phrase phDrum = new Phrase("drumline");
+
+
     }
 
     /**
