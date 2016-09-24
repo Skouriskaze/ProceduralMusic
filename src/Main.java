@@ -28,7 +28,7 @@ public class Main extends Application {
 
     private static Score dummyScore() {
         Score r = new Score();
-        r.setTempo(120);
+        r.setTempo(80);
         Part p = new Part();
         Phrase ph = new Phrase();
         //-----------

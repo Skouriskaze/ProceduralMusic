@@ -5,6 +5,7 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
+import jm.music.tools.Mod;
 import jm.util.Play;
 
 import java.util.ArrayList;
@@ -22,16 +23,36 @@ public class MusicGenerator implements JMC {
     private int nBase;
 
     public MusicGenerator(Score s, int nBase) {
-        sRoot = s;
+        this.sRoot = s;
         aIterations = new ArrayList<>();
         this.nBase = nBase;
-        aIterations.add(s);
+        //aIterations.add(s);
 
         Score bass = sRoot.copy();
         Phrase phOld = sRoot.getPart(0).getPhrase(0);
-        addBassLine(bass, phOld, 1);
+        phOld.setTitle("root");
+        Phrase phBass = addBassLine(bass, phOld, 2);
+        addOctaveBaseLine(bass, phBass);
+//        addRandomBass(bass, 2);
         addHighHarmony(bass, phOld);
         aIterations.add(bass);
+    }
+
+    private Phrase addRandomBass(Score s, int nOctave) {
+        Part pBass = new Part("randombass");
+        Phrase phBass = new Phrase("randombass");
+        Random rand = new Random();
+        int[] aBass = new int[2 * (int) lengthPhraseBeats(s.getPart(0).getPhrase(0))];
+        Arrays.fill(aBass, Integer.MIN_VALUE);
+        for (int i = 0; i < aBass.length / 2; i++) {
+            aBass[2 * i] = MAJOR_SCALE[rand.nextInt(MAJOR_SCALE.length)] - 12 * nOctave;
+        }
+
+        arrayToPhrase(phBass, aBass);
+        pBass.add(phBass);
+        s.add(pBass);
+
+        return phBass;
     }
 
 
@@ -40,9 +61,9 @@ public class MusicGenerator implements JMC {
      * @param s Score to add a phrase to
      * @param phOld the original phrase
      */
-    private void addHighHarmony(Score s, Phrase phOld) {
-        Part pHarmony = new Part();
-        Phrase phHarmony = new Phrase();
+    private Phrase addHighHarmony(Score s, Phrase phOld) {
+        Part pHarmony = new Part("highharmony");
+        Phrase phHarmony = new Phrase("highharmony");
 
         int[] aOld = arrayPhrase(phOld);
         int[] aHarm = new int[aOld.length];
@@ -58,6 +79,8 @@ public class MusicGenerator implements JMC {
         arrayToPhrase(phHarmony, aHarm);
         pHarmony.add(phHarmony);
         s.add(pHarmony);
+
+        return phHarmony;
     }
 
     /**
@@ -66,38 +89,67 @@ public class MusicGenerator implements JMC {
      * @param phOld Original phrase
      * @param nOctaves The number of octaves to drop (0 is the same)
      */
-    private void addBassLine(Score s, Phrase phOld, int nOctaves) {
+    private Phrase addBassLine(Score s, Phrase phOld, int nOctaves) {
 
-        Part pBass = new Part();
-        Phrase phBass = new Phrase();
+        Part pBass = new Part("bassline");
+        Phrase phBass = new Phrase("bassline");
 
         int[] aOld = arrayPhrase(phOld);
-
-        System.out.print("Old: ");
-        printArray(aOld);
-
-        Random rand = new Random();
         int[] aBass = new int[aOld.length];
 
+        // Copying bass an octave down
         for (int i = 0; i < aOld.length; i++) {
             if (aOld[i] > Integer.MIN_VALUE) {
-                /*boolean bHarmonic = rand.nextBoolean();
-                bHarmonic = false;
-                if (bHarmonic)
-                    aBass[i] = findHarmonic(aOld[i], C4) - nOctaves * 12;
-                else */
-                    aBass[i] = aOld[i] - nOctaves * 12;
+                aBass[i] = aOld[i] - nOctaves * 12;
             } else {
                 aBass[i] = Integer.MIN_VALUE;
             }
         }
 
-        System.out.print("Bass: ");
-        printArray(aBass);
+        arrayToPhrase(phBass, aBass);
+        phBass.setDynamic(2);
+        pBass.add(phBass);
+        s.add(pBass);
+
+        return phBass;
+    }
+
+    /**
+     * Adds an alternating octave to the score
+     * @param s Score to add
+     * @param phOld The bass line
+     * @return Returns the alternating pattern
+     */
+    private Phrase addOctaveBaseLine(Score s, Phrase phOld) {
+        Part pBass = new Part("octavebaseline");
+        Phrase phBass = new Phrase("octavebaseline");
+
+        int[] aOld = arrayPhrase(phOld);
+        int[] aBass = new int[aOld.length];
+
+
+        int i = 0;
+        while (i < aOld.length) {
+            int nNote = aOld[i];
+            aBass[i] = nNote + 12;
+            boolean bFlipped = false;
+            while (++i < aOld.length && aOld[i] == Integer.MIN_VALUE) {
+                aBass[i] = nNote + 12 * (bFlipped ? 1 : 0);
+                bFlipped = !bFlipped;
+            }
+        }
+
+        //Shifting
+        for (int j = aBass.length - 1; j > 0; j--) {
+            aBass[j] = aBass[j - 1];
+        }
+        aBass[0] = aOld[0];
 
         arrayToPhrase(phBass, aBass);
         pBass.add(phBass);
         s.add(pBass);
+
+        return phBass;
     }
 
     /**
