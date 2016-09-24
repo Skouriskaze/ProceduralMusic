@@ -1,6 +1,8 @@
 package Models;
 
 import jm.JMC;
+import jm.audio.Instrument;
+import jm.constants.Durations;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -32,9 +34,10 @@ public class MusicGenerator implements JMC {
         Phrase phOld = sRoot.getPart(0).getPhrase(0);
         phOld.setTitle("root");
         Phrase phBass = addBassLine(bass, phOld, 2).getPhrase(0);
-        addOctaveBaseLine(bass, phBass);
+//        addOctaveBaseLine(bass, phBass);
 //        addRandomBass(bass, 2);
         addHighHarmony(bass, phOld);
+        addDrumLine(bass);
         aIterations.add(bass);
     }
 
@@ -52,7 +55,7 @@ public class MusicGenerator implements JMC {
         pBass.add(phBass);
         s.add(pBass);
 
-        return phBass;
+        return pBass;
     }
 
     /**
@@ -152,10 +155,29 @@ public class MusicGenerator implements JMC {
     }
 
     private Part addDrumLine(Score s) {
-        Part pDrum = new Part("drumline");
-        Phrase phDrum = new Phrase("drumline");
+        Part pDrum = new Part("Drum Kit", 0, 9);
+        Phrase phBass = new Phrase(0.0);
+        Phrase phHighHat = new Phrase(0.0);
+        Phrase phSnare = new Phrase(0.0);
 
+        int nLength = (int) lengthPhraseBeats(s.getPart(0).getPhrase(0));
+        for (int i = 0; i < nLength / 4; i++) {
+            phBass.addNote(36, HALF_NOTE);
+            phBass.addNote(36, HALF_NOTE);
+            phSnare.addNote(REST, QUARTER_NOTE);
+            phSnare.addNote(38, HALF_NOTE);
+            phSnare.addNote(38, QUARTER_NOTE);
+            phHighHat.addNote(42, QUARTER_NOTE);
+            phHighHat.addNote(42, QUARTER_NOTE);
+            phHighHat.addNote(42, QUARTER_NOTE);
+            phHighHat.addNote(42, QUARTER_NOTE);
+        }
 
+        pDrum.add(phBass);
+        pDrum.add(phHighHat);
+        pDrum.add(phSnare);
+        s.add(pDrum);
+        return pDrum;
     }
 
     /**
