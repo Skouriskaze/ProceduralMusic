@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../SDK/jMusic1.6.4.jar!/" />
+          <root url="jar://C:/jmusic/jMusic1.6.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
