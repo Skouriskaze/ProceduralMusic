@@ -1,4 +1,4 @@
-package sample;
+package Models;
 
 import jm.JMC;
 import jm.music.data.Score;
@@ -19,5 +19,6 @@ public class MusicGenerator implements JMC {
         Runnable p = () -> Play.midi(sRoot);
         Thread thread = new Thread(p);
         thread.start();
+        // Testing
     }
 }

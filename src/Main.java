@@ -1,12 +1,9 @@
-package sample;
-
+import Models.MusicGenerator;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import jm.JMC;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
