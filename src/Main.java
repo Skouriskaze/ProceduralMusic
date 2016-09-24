@@ -21,7 +21,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        MusicGenerator gen = new MusicGenerator(dummyScore());
+        MusicGenerator gen = new MusicGenerator(dummyScore(), JMC.C4);
         gen.play();
         launch(args);
     }
@@ -31,28 +31,14 @@ public class Main extends Application {
         r.setTempo(120);
         Part p = new Part();
         Phrase ph = new Phrase();
-        //------------
-        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.C4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.E4, JMC.HALF_NOTE);
-        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.D4, JMC.HALF_NOTE);
-        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        //ph.addNote(JMC.E4, JMC.HALF_NOTE);
+        //-----------
         ph.addNote(JMC.C4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.E4, JMC.HALF_NOTE);
         ph.addNote(JMC.G4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.A4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.B4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.C5, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.B4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.A4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.G4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.C4, JMC.WHOLE_NOTE);
         //------------
         Part b = new Part();
