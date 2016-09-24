@@ -13,16 +13,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("RiffForm\\sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = FXMLLoader.load(getClass().getResource("RiffForm\\musicGUI.fxml"));
+        primaryStage.setTitle("Procedurally Generated Music");
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
 
     public static void main(String[] args) {
-        MusicGenerator gen = new MusicGenerator(dummyScore());
-        gen.play();
+        //MusicGenerator gen = new MusicGenerator(dummyScore());
+        //gen.play();
         launch(args);
     }
 
