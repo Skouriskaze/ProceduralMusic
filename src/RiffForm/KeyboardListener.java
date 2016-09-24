@@ -1,31 +1,25 @@
 package RiffForm;
 
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 /**
  * Created by Jesse on 9/24/2016.
  */
 public class KeyboardListener implements InputListener {
-    @Override
-    public boolean isDownPressed() {
-        return false;
+    private Scene scene;
+
+    public KeyboardListener(Scene scene) {
+        this.scene = scene;
     }
 
     @Override
-    public boolean isUpPressed() {
-        return false;
-    }
-
-    @Override
-    public boolean isLeftPressed() {
-        return false;
-    }
-
-    @Override
-    public boolean isRightPressed() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnterPressed() {
-        return false;
+    public void addModel(RiffModel model) {
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if (key.getCode() == KeyCode.DOWN) {
+                model.eventDownPressed();
+            }
+        });
     }
 }
