@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import jm.music.data.Score;
+import jm.util.Play;
 
 public class RiffController implements RiffModel {
     @FXML
@@ -49,6 +50,7 @@ public class RiffController implements RiffModel {
     @Override
     public void eventEnterPressed() {
         System.out.println("Enter Pressed!");
+        Play.closeAll();
     }
 
     @Override

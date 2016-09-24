@@ -28,20 +28,45 @@ public class Main extends Application {
 
     private static Score dummyScore() {
         Score r = new Score();
+        r.setTempo(120);
         Part p = new Part();
         Phrase ph = new Phrase();
         //------------
+        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.C4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.E4, JMC.HALF_NOTE);
+        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.D4, JMC.HALF_NOTE);
+        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
+        //ph.addNote(JMC.E4, JMC.HALF_NOTE);
         ph.addNote(JMC.C4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.E4, JMC.QUARTER_NOTE);
-        ph.addNote(JMC.F4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.G4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.A4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.B4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.C5, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.B4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.A4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.G4, JMC.QUARTER_NOTE);
+        ph.addNote(JMC.C4, JMC.WHOLE_NOTE);
+        //------------
+        Part b = new Part();
+        Phrase bh = new Phrase();
+        //------------
+        bh.addChord(new int[] {JMC.E3, JMC.E2}, JMC.WHOLE_NOTE);
+        bh.addChord(new int[] {JMC.C3, JMC.C2}, JMC.WHOLE_NOTE);
+        bh.addChord(new int[] {JMC.D3, JMC.D2}, JMC.WHOLE_NOTE);
+        bh.addChord(new int[] {JMC.E3, JMC.E2}, JMC.WHOLE_NOTE);
         //------------
         p.add(ph);
+        b.add(bh);
         r.add(p);
+        //r.add(b);
 
         return r;
         // ---
