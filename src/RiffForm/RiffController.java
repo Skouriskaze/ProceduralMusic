@@ -1,6 +1,7 @@
 package RiffForm;
 
 
+import Models.AsyncPlayer;
 import com.leapmotion.leap.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import jm.JMC;
+import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Play;
 
@@ -30,6 +35,10 @@ public class RiffController implements RiffModel {
     private double noteCount;
     private double noteValue;
     private int measureNum;
+
+    private Score score;
+    private Part p;
+    private Phrase ph;
 
     Controller controller;
     List<InputListener> listeners;
@@ -65,6 +74,11 @@ public class RiffController implements RiffModel {
         notesGC = notes.getGraphicsContext2D();
         notesGC.drawImage(images[currentNote][1], 100, currentScale * 8);
 
+        score = new Score();
+        score.setTempo(100);
+        p = new Part();
+        ph = new Phrase();
+
         //Leap
         listeners = new ArrayList<>();
         controller = new Controller();
@@ -96,7 +110,6 @@ public class RiffController implements RiffModel {
         } else {
             System.out.println("At the moment we have a 1 octave range. Sorry");
         }
-
     }
 
     @Override
@@ -139,23 +152,38 @@ public class RiffController implements RiffModel {
 
     @Override
     public void eventEnterPressed() {
-        System.out.println("Enter Pressed!");
-        
-        notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-        notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
-        if (currentScale == 7) {
-            notesGC.fillRect(97 + measureNum * 140 + noteCount * 30, 111, 26, 2);
-        }
-        noteCount += noteValue;
-        noteValue = 1;
-        currentNote = 0;
-        if (noteCount == 4) {
-            noteCount = 0;
-            measureNum += 1;
-            staffGC.fillRect(84 + measureNum  * 140, 30, 3, 64);
-        }
-        notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+        if (measureNum < 3){
+            System.out.println("Enter Pressed!");
+            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
+            notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            if (currentScale == 7) {
+                notesGC.fillRect(97 + measureNum * 140 + noteCount * 30, 111, 26, 2);
+            }
+            noteCount += noteValue;
+            Note n = new Note(JMC.MAJOR_SCALE[(7 - currentScale)%7] + 12 * (7 - currentScale >= 7 ? 1 : 0) + JMC.C4, noteValue);
+            ph.addNote(n);
+            // Todo: Make async
+//            AsyncPlayer.play(n);
+//            Play.midi(n);start();
+            noteValue = 1;
+            currentNote = 0;
+            if (noteCount == 4) {
+                noteCount = 0;
+                measureNum += 1;
+                staffGC.fillRect(84 + measureNum * 140, 30, 3, 64);
+            }
+            if (measureNum < 3) {
+                notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            } else {
+                p.addPhrase(ph);
+                score.addPart(p);
+                System.out.println("Reached the end of allotted space. added to parts");
 
+                AsyncPlayer.play(score);
+            }
+        } else {
+            System.out.println("Stop pressing enter you ho!");
+        }
     }
 
     @Override

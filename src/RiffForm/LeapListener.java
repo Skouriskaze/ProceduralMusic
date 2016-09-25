@@ -5,6 +5,8 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.GestureList;
+import com.leapmotion.leap.Hand;
+import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
@@ -102,7 +104,9 @@ public class LeapListener extends Listener implements InputListener {
                     if (ges.type() == Gesture.Type.TYPE_CIRCLE) {
                         CircleGesture circle = new CircleGesture(ges);
                         boolean clockwise = circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 2;
-                        direction[clockwise ? 0 : 1]++;
+                        if (circle.radius() > 20) {
+                            direction[clockwise ? 0 : 1]++;
+                        }
                     }
                 }
 
@@ -112,8 +116,22 @@ public class LeapListener extends Listener implements InputListener {
                     model.eventRightPressed();
                 }
             }
-            state = GestureState.NONE;
+
+            if (!frame.hands().isEmpty()) {
+                HandList hands = frame.hands();
+                float fStrength = hands.get(0).grabStrength();
+
+                if (fStrength > 0.9f) {
+                    if (state == GestureState.NONE) {
+                        model.eventEnterPressed();
+                    }
+                    state = GestureState.PINCHING;
+                } else {
+                    state = GestureState.NONE;
+                }
+            }
         }
+
     }
 
     @Override
