@@ -33,11 +33,11 @@ public class MusicGenerator implements JMC {
         Score bass = sRoot.copy();
         Phrase phOld = sRoot.getPart(0).getPhrase(0);
         phOld.setTitle("root");
-        Phrase phBass = addBassLine(bass, phOld, 2).getPhrase(0);
+//        Phrase phBass = addBassLine(bass, phOld, 2).getPhrase(0);
 //        addOctaveBaseLine(bass, phBass);
-//        addRandomBass(bass, 2);
+        addRandomBass(bass, 2);
         addHighHarmony(bass, phOld);
-        addDrumLine(bass);
+//        addDrumLine(bass);
         aIterations.add(bass);
     }
 
@@ -109,7 +109,6 @@ public class MusicGenerator implements JMC {
         }
 
         arrayToPhrase(phBass, aBass);
-        phBass.setDynamic(2);
         pBass.add(phBass);
         s.add(pBass);
 
