@@ -7,16 +7,27 @@ import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
+import com.leapmotion.leap.Vector;
 
 /**
  * Created by Jesse on 9/24/2016.
  */
 public class LeapListener extends Listener implements InputListener {
-    Frame last;
+    private GestureList last;
+    private RiffModel model;
+    private GestureState state;
+
+    public enum GestureState {
+        SWIPING,
+        CIRCLING,
+        PINCHING,
+        NONE;
+    }
 
     @Override
     public void onInit(Controller controller) {
-        last = new Frame();
+        last = new GestureList();
+        state = GestureState.NONE;
         System.out.println("Initialized");
     }
 
@@ -41,27 +52,72 @@ public class LeapListener extends Listener implements InputListener {
     public void onFrame(Controller controller) {
         Frame frame = controller.frame();
         GestureList gestures = frame.gestures();
-        for (int i = 0; i < gestures.count(); i++) {
-            Gesture ges = gestures.get(i);
-            switch (ges.type()) {
-                case TYPE_SWIPE:
-                    SwipeGesture swipe = new SwipeGesture(ges);
-                    System.out.println(swipe.direction());
-                    break;
-                case TYPE_CIRCLE:
-                    CircleGesture circle = new CircleGesture(ges);
-                    boolean clockwise = circle.pointable().direction().angleTo(circle.normal()) <= Math.PI/2;
-                    break;
-                default:
-                    break;
+        if (!gestures.isEmpty()) {
+            for (int i = 0; i < gestures.count(); i++) {
+                Gesture ges = gestures.get(i);
+                switch (ges.type()) {
+                    case TYPE_SWIPE:
+                        if (state == GestureState.NONE || state == GestureState.SWIPING) {
+                            state = GestureState.SWIPING;
+                            last = gestures;
+                        }
+//                        SwipeGesture swipe = new SwipeGesture(ges);
+//                        System.out.print(swipe.id() + ": ");
+//                        System.out.println(swipe.direction());
+                        break;
+                    case TYPE_CIRCLE:
+//                        CircleGesture circle = new CircleGesture(ges);
+                        if (state == GestureState.NONE || state == GestureState.CIRCLING) {
+                            state = GestureState.CIRCLING;
+                            last = gestures;
+                        }
+                        break;
+                    default:
+                        state = GestureState.NONE;
+                        break;
+                }
             }
-        }
+        } else {
+            if (state == GestureState.SWIPING) {
+                System.out.println("I was swiping.");
+                Vector swipeDirection = new Vector(0, 0, 0);
+                for (int i = 0; i < last.count(); i++) {
+                    Gesture ges = last.get(i);
+                    if (ges.type() == Gesture.Type.TYPE_SWIPE) {
+                        SwipeGesture swipe = new SwipeGesture(ges);
+                        swipeDirection = swipeDirection.plus(swipe.direction());
+                    }
+                }
 
-        last = frame;
+                float yAngle = swipeDirection.angleTo(Vector.yAxis());
+                if (yAngle < Math.PI / 6) {
+                    model.eventUpPressed();
+                } else if (yAngle > Math.PI * 5 / 6) {
+                    model.eventDownPressed();
+                }
+            } else if (state == GestureState.CIRCLING) {
+                int[] direction = new int[] {0, 0};
+                for (int i = 0; i < last.count(); i++) {
+                    Gesture ges = last.get(i);
+                    if (ges.type() == Gesture.Type.TYPE_CIRCLE) {
+                        CircleGesture circle = new CircleGesture(ges);
+                        boolean clockwise = circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 2;
+                        direction[clockwise ? 0 : 1]++;
+                    }
+                }
+
+                if (direction[0] < direction[1]) {
+                    model.eventLeftPressed();
+                } else if (direction[1] < direction[0]) {
+                    model.eventRightPressed();
+                }
+            }
+            state = GestureState.NONE;
+        }
     }
 
     @Override
     public void addModel(RiffModel model) {
-
+        this.model = model;
     }
 }

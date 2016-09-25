@@ -12,6 +12,9 @@ import javafx.scene.layout.VBox;
 import jm.music.data.Score;
 import jm.util.Play;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RiffController implements RiffModel {
     @FXML VBox root;
 
@@ -27,6 +30,9 @@ public class RiffController implements RiffModel {
     private double noteCount;
     private double noteValue;
     private int measureNum;
+
+    Controller controller;
+    List<InputListener> listeners;
 
     @FXML public void initialize() {
         currentNote = 0;
@@ -58,14 +64,24 @@ public class RiffController implements RiffModel {
         staffGC.fillRect(0, 94, 600, 3);
         notesGC = notes.getGraphicsContext2D();
         notesGC.drawImage(images[currentNote][1], 100, currentScale * 8);
+
+        //Leap
+        listeners = new ArrayList<>();
+        controller = new Controller();
     }
 
     public void onPress(ActionEvent e) {
         InputListener il = new KeyboardListener(root.getScene());
+        listeners.add(il);
+
         LeapListener il2 = new LeapListener();
-        Controller controller = new Controller();
+        listeners.add(il2);
         controller.addListener(il2);
-        il.addModel(this);
+
+        for (InputListener ill : listeners) {
+            ill.addModel(this);
+        }
+
         System.out.println("Button pressed");
         start.setVisible(false);
     }
