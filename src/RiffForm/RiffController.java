@@ -8,9 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import jm.JMC;
-import jm.music.data.Part;
-import jm.music.data.Phrase;
 import jm.music.data.Score;
 
 public class RiffController implements RiffModel {
@@ -29,20 +26,15 @@ public class RiffController implements RiffModel {
     private double noteValue;
     private int measureNum;
 
-    private Score score;
-    private Part p;
-    private Phrase ph;
-
     @FXML public void initialize() {
-        start.setStyle("-fx-background-color: white;");
         currentNote = 0;
-        currentScale = 7;
+        currentScale = 0;
         noteValue = 1;
         noteCount = 0;
         measureNum = 0;
         Image clef = null;
         images = new Image[3][2];
-
+        start.setStyle("-fx-background-color: white;");
         try {
             clef = new Image("res\\TrebleClef.png", 0, 118, true, true);
             images[0][0] = new Image("res\\QuarterNote.png", 0, 64, true, true);
@@ -55,7 +47,6 @@ public class RiffController implements RiffModel {
         } catch (NullPointerException | IllegalArgumentException e) {
             e.printStackTrace();
         }
-
         staffGC = staff.getGraphicsContext2D();
         staffGC.drawImage(clef, 0, 6);
         staffGC.fillRect(0, 30, 600, 3);
@@ -65,10 +56,6 @@ public class RiffController implements RiffModel {
         staffGC.fillRect(0, 94, 600, 3);
         notesGC = notes.getGraphicsContext2D();
         notesGC.drawImage(images[currentNote][1], 100, currentScale * 8);
-
-        score = new Score();
-        p = new Part();
-        ph = new Phrase();
     }
 
     public void onPress(ActionEvent e) {
@@ -131,39 +118,26 @@ public class RiffController implements RiffModel {
 
     @Override
     public void eventEnterPressed() {
-        if (measureNum < 3){
-            System.out.println("Enter Pressed!");
-            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
-            if (currentScale == 7) {
-                notesGC.fillRect(97 + measureNum * 140 + noteCount * 30, 111, 26, 2);
-            }
-            noteCount += noteValue;
-            ph.addNote(JMC.MAJOR_SCALE[(7 - currentScale)%7] + 12 * (7 - currentScale >= 7 ? 1 : 0) + JMC.C4, noteValue);
-            noteValue = 1;
-            currentNote = 0;
-            if (noteCount == 4) {
-                noteCount = 0;
-                measureNum += 1;
-                staffGC.fillRect(84 + measureNum * 140, 30, 3, 64);
-            }
-            if (measureNum < 3) {
-                notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
-            } else {
-                p.addPhrase(ph);
-                score.addPart(p);
-                System.out.println("Reached the end of allotted space. added to parts");
-            }
-        } else {
-            System.out.println("Stop pressing enter you ho!");
+        System.out.println("Enter Pressed!");
+        notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
+        notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+        if (currentScale == 7) {
+            notesGC.fillRect(97 + measureNum * 140 + noteCount * 30, 111, 26, 2);
         }
+        noteCount += noteValue;
+        noteValue = 1;
+        currentNote = 0;
+        if (noteCount == 4) {
+            noteCount = 0;
+            measureNum += 1;
+            staffGC.fillRect(84 + measureNum  * 140, 30, 3, 64);
+        }
+        notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
     }
-
-
 
     @Override
     public Score getScore() {
-        return score;
+        return null;
     }
 }
 
