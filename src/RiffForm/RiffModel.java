@@ -30,6 +30,12 @@ public interface RiffModel {
      * Places the current note.
      */
     void eventEnterPressed();
+
+    /**
+     * Undos previous note
+     */
+    void eventBackspacePressed();
+
     /**
      * Gets the user-defined riff
      * @return the score of the user's rift

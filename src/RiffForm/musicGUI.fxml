@@ -15,13 +15,25 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAction" text="Save" />
               <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
               <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Transpose" />
+                  <Menu mnemonicParsing="false" text="Set Tempo">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="60" />
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="80" />
+                      <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="100" />
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="120" />
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="140" />
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="160" />
+                        <MenuItem mnemonicParsing="false" onAction="#setTempoAction" text="200" />
+                    </items>
+                  </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#eventEnterPressed" text="Enter Note" />
                   <MenuItem mnemonicParsing="false" onAction="#eventRightPressed" text="Increase Note Value" />
                   <MenuItem mnemonicParsing="false" onAction="#eventLeftPressed" text="Decrease Note Value" />
