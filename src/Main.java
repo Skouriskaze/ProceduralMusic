@@ -23,6 +23,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         //MusicGenerator gen = new MusicGenerator(dummyScore());
         //gen.play();
+        System.out.println(JMC.MAJOR_SCALE.length);
         launch(args);
     }
 
