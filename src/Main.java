@@ -1,10 +1,12 @@
 import Models.MusicGenerator;
+import Models.NewMusicGenerator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import jm.JMC;
+import jm.constants.Pitches;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
@@ -23,6 +25,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         //MusicGenerator gen = new MusicGenerator(dummyScore());
         //gen.play();
+        dummyScore();
         launch(args);
     }
 
@@ -41,20 +44,12 @@ public class Main extends Application {
         ph.addNote(JMC.D4, JMC.QUARTER_NOTE);
         ph.addNote(JMC.C4, JMC.WHOLE_NOTE);
         //------------
-        Part b = new Part();
-        Phrase bh = new Phrase();
-        //------------
-        bh.addChord(new int[] {JMC.E3, JMC.E2}, JMC.WHOLE_NOTE);
-        bh.addChord(new int[] {JMC.C3, JMC.C2}, JMC.WHOLE_NOTE);
-        bh.addChord(new int[] {JMC.D3, JMC.D2}, JMC.WHOLE_NOTE);
-        bh.addChord(new int[] {JMC.E3, JMC.E2}, JMC.WHOLE_NOTE);
-        //------------
         p.add(ph);
-        b.add(bh);
         r.add(p);
+
+        NewMusicGenerator gen = new NewMusicGenerator(r, Pitches.C4);
         //r.add(b);
 
         return r;
-        // ---
     }
 }
