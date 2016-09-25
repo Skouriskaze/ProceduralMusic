@@ -2,12 +2,40 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="root" prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RiffForm.RiffController">
    <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="Save" />
+              <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" onAction="#eventEnterPressed" text="Enter Note" />
+                  <MenuItem mnemonicParsing="false" onAction="#eventRightPressed" text="Increase Note Value" />
+                  <MenuItem mnemonicParsing="false" onAction="#eventLeftPressed" text="Decrease Note Value" />
+                  <MenuItem mnemonicParsing="false" onAction="#eventUpPressed" text="Note Up" />
+                  <MenuItem mnemonicParsing="false" onAction="#eventDownPressed" text="Note Down" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
       <StackPane prefHeight="150.0" prefWidth="200.0">
          <children>
             <Canvas fx:id="staff" height="300.0" width="600.0" />

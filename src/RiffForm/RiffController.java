@@ -100,6 +100,10 @@ public class RiffController implements RiffModel {
         start.setVisible(false);
     }
 
+    public void closeAction() {
+        System.exit(0);
+    }
+
     @Override
     public void eventDownPressed() {
         System.out.println("Down Pressed!");

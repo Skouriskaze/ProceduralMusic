@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../SDK/LeapDeveloperKit_2.3.1+31549_win/LeapSDK/lib/LeapJava.jar!/" />
+          <root url="jar://C:/jmusic/jMusic1.6.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../SDK/jMusic1.6.4.jar!/" />
+          <root url="jar://$USER_HOME$/AppData/Local/LeapSDK/lib/LeapJava.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
