@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -26,6 +28,7 @@ public class RiffController implements RiffModel {
     @FXML private Canvas staff;
     @FXML private Canvas notes;
     @FXML private Pane start;
+    //@FXML private TextField tempoField;
     private Image[][] images;
     private GraphicsContext notesGC;
     private GraphicsContext staffGC;
@@ -35,6 +38,7 @@ public class RiffController implements RiffModel {
     private double noteCount;
     private double noteValue;
     private int measureNum;
+    private int tempo;
 
     private Score score;
     private Part p;
@@ -44,6 +48,7 @@ public class RiffController implements RiffModel {
     List<InputListener> listeners;
 
     @FXML public void initialize() {
+        tempo = 100;
         currentNote = 0;
         currentScale = 0;
         noteValue = 1;
@@ -193,6 +198,11 @@ public class RiffController implements RiffModel {
     @Override
     public Score getScore() {
         return null;
+    }
+
+    @FXML
+    public void tempoAction(ActionEvent e) {
+        tempo = Integer.parseInt(((MenuItem) e.getSource()).getText());
     }
 }
 

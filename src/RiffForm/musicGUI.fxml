@@ -22,6 +22,17 @@
           <Menu mnemonicParsing="false" text="Edit">
             <items>
               <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Transpose" />
+                  <Menu mnemonicParsing="false" text="Tempo">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#tempoAction" text="60" />
+                        <MenuItem mnemonicParsing="false" text="80" />
+                      <MenuItem mnemonicParsing="false" text="100" />
+                        <MenuItem mnemonicParsing="false" text="120" />
+                        <MenuItem mnemonicParsing="false" text="140" />
+                        <MenuItem mnemonicParsing="false" text="160" />
+                    </items>
+                  </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#eventEnterPressed" text="Enter Note" />
                   <MenuItem mnemonicParsing="false" onAction="#eventRightPressed" text="Increase Note Value" />
                   <MenuItem mnemonicParsing="false" onAction="#eventLeftPressed" text="Decrease Note Value" />
