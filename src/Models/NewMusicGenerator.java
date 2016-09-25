@@ -1,11 +1,15 @@
 package Models;
 
 import RiffForm.InputListener;
+import inst.*;
 import jm.JMC;
+import jm.audio.Instrument;
+import jm.audio.RTMixer;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
+import jm.music.rt.RTLine;
 import jm.util.Play;
 
 import java.util.ArrayList;
@@ -19,7 +23,7 @@ import java.util.Random;
  */
 public class NewMusicGenerator implements JMC {
     private Score root;
-    private Score song;
+    private List<Score> song;
     private int base;
 
     private double dNoteSimilarity;
@@ -31,7 +35,7 @@ public class NewMusicGenerator implements JMC {
 
     public NewMusicGenerator(Score s, int base, double noteSim, double rhythmSim) {
         root = s;
-        song = root.copy();
+        song = new ArrayList<>();
         this.base = base;
         currentPhrase = root.getPart(0).getPhrase(0);
 
@@ -39,10 +43,46 @@ public class NewMusicGenerator implements JMC {
         dRhythmSimilarity = rhythmSim;
 
         rand = new Random();
+
+        createSong();
+    }
+
+    public class MyLine extends RTLine {
+        private int base = 60;
+        public MyLine(Instrument[] args) {
+            super(args);
+            RTMixer mixer = new RTMixer(new RTLine[] {this});
+            mixer.begin();
+        }
+
+        @Override
+        public Note getNextNote() {
+            return new Note(base++, QUARTER_NOTE);
+        }
+    }
+
+    private void createSong() {
+        Instrument inst = new SineInst(44100);
+        MyLine line = new MyLine(new Instrument[] {inst});
+        /*
+        for (int i = 0; i < 10; i++) {
+            Phrase ph = makeNewPhrase();
+            addPhrase(ph);
+        }
+
+        for (Score s : song) {
+            Play.midi(s);
+        }
+        */
+    }
+
+    private void addPhrase(Phrase ph) {
+        song.add(new Score(new Part(ph)));
+        appendCurrentPhrase(ph);
     }
 
     public NewMusicGenerator(Score s, int base) {
-        this(s, base, 0.5, 0.5);
+        this(s, base, 0.25, 0.25);
     }
 
     private Map<Integer, Double> countPhraseNotes() {
@@ -93,7 +133,7 @@ public class NewMusicGenerator implements JMC {
             nBeats += freq[nNotes++];
         } while (nBeats <= 4);
 
-        for (int i = 0; i < nNotes; i++) {
+        for (int i = 1; i < nNotes; i++) {
             currentPhrase.removeNote(0);
         }
     }
@@ -113,7 +153,7 @@ public class NewMusicGenerator implements JMC {
             if (bRhySim) {
                 boolean bEqualChance = rand.nextDouble() > dRhythmSimilarity;
                 if (bEqualChance) {
-                    rhy = new double[]{1, 2, 4}[rand.nextInt(3)];
+                    rhy = new double[]{1, 1, 1, 1, 2, 4}[rand.nextInt(6)];
                     while (rhy + totalRhy > 4) {
                         rhy /= 2;
                     }
@@ -134,7 +174,7 @@ public class NewMusicGenerator implements JMC {
                 rhythms.add(rhy);
                 totalRhy += rhy;
             } else {
-                rhy = new double[]{1, 2, 4}[rand.nextInt(3)];
+                rhy = new double[]{1, 1, 1, 1, 2, 4}[rand.nextInt(6)];
                 while (rhy + totalRhy > 4) {
                     rhy /= 2;
                 }

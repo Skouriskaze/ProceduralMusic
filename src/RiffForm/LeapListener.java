@@ -91,11 +91,16 @@ public class LeapListener extends Listener implements InputListener {
                     }
                 }
 
+                float xAngle = swipeDirection.angleTo(Vector.xAxis());
                 float yAngle = swipeDirection.angleTo(Vector.yAxis());
                 if (yAngle < Math.PI / 6) {
                     model.eventUpPressed();
                 } else if (yAngle > Math.PI * 5 / 6) {
                     model.eventDownPressed();
+                }
+                System.out.println(xAngle);
+                if (xAngle > Math.PI * 4 / 6) {
+                    model.eventBackspacePressed();
                 }
             } else if (state == GestureState.CIRCLING) {
                 int[] direction = new int[] {0, 0};
