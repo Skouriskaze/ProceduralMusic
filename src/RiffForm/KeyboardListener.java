@@ -29,6 +29,8 @@ public class KeyboardListener implements InputListener {
                 model.eventRightPressed();
             } else if (key.getCode() == KeyCode.ENTER) {
                 model.eventEnterPressed();
+            } else if (key.getCode() == KeyCode.BACK_SPACE) {
+                model.eventBackspacePressed();
             }
         });
     }

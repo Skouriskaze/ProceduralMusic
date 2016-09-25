@@ -12,14 +12,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Play;
+import jm.util.Write;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RiffController implements RiffModel {
@@ -28,17 +37,16 @@ public class RiffController implements RiffModel {
     @FXML private Canvas staff;
     @FXML private Canvas notes;
     @FXML private Pane start;
-    //@FXML private TextField tempoField;
     private Image[][] images;
     private GraphicsContext notesGC;
     private GraphicsContext staffGC;
     private int currentNote;
     private int currentScale;
 
+    private Deque<Note> noteList;
     private double noteCount;
     private double noteValue;
     private int measureNum;
-    private int tempo;
 
     private Score score;
     private Part p;
@@ -48,7 +56,7 @@ public class RiffController implements RiffModel {
     List<InputListener> listeners;
 
     @FXML public void initialize() {
-        tempo = 100;
+        noteList = new LinkedList<>();
         currentNote = 0;
         currentScale = 0;
         noteValue = 1;
@@ -109,13 +117,21 @@ public class RiffController implements RiffModel {
         System.exit(0);
     }
 
+    private void drawNote(int transparent) {
+        notesGC.drawImage(images[currentNote][transparent], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+    }
+
+    private void eraseNote() {
+        notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
+    }
+
     @Override
     public void eventDownPressed() {
         System.out.println("Down Pressed!");
         if (currentScale < 7) {
             currentScale += 1;
-            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            eraseNote();
+            drawNote(1);
         } else {
             System.out.println("At the moment we have a 1 octave range. Sorry");
         }
@@ -126,8 +142,8 @@ public class RiffController implements RiffModel {
         System.out.println("Up Pressed!");
         if (currentScale > 0) {
             currentScale -= 1;
-            notesGC.clearRect(97 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            eraseNote();
+            drawNote(1);
         } else {
             System.out.println("At the moment we have a 1 octave range. Sorry");
         }
@@ -139,8 +155,8 @@ public class RiffController implements RiffModel {
         if (noteValue > 1) {
             noteValue *= 0.5;
             currentNote--;
-            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            eraseNote();
+            drawNote(1);
         } else {
             System.out.println("Unable to reduce note value.");
         }
@@ -152,8 +168,8 @@ public class RiffController implements RiffModel {
         if (noteValue < 4 && noteValue * 2 <= 4 - noteCount) {
             noteValue *= 2;
             currentNote++;
-            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            eraseNote();
+            drawNote(1);
         } else {
             System.out.println("Unable to increase note value.");
         }
@@ -161,15 +177,17 @@ public class RiffController implements RiffModel {
 
     @Override
     public void eventEnterPressed() {
+        System.out.println(noteCount);
         if (measureNum < 3){
             System.out.println("Enter Pressed!");
-            notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
-            notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+            eraseNote();
+            drawNote(0);
             if (currentScale == 7) {
                 notesGC.fillRect(97 + measureNum * 140 + noteCount * 30, 111, 26, 2);
             }
             noteCount += noteValue;
             Note n = new Note(JMC.MAJOR_SCALE[(7 - currentScale)%7] + 12 * (7 - currentScale >= 7 ? 1 : 0) + JMC.C4, noteValue);
+            noteList.addLast(n);
             ph.addNote(n);
             // Todo: Make async
 //            AsyncPlayer.play(n);
@@ -178,11 +196,11 @@ public class RiffController implements RiffModel {
             currentNote = 0;
             if (noteCount == 4) {
                 noteCount = 0;
-                measureNum += 1;
-                staffGC.fillRect(84 + measureNum * 140, 30, 3, 64);
+                measureNum ++;
+                notesGC.fillRect(84 + measureNum * 140, 30, 3, 64);
             }
             if (measureNum < 3) {
-                notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+                drawNote(1);
             } else {
                 p.addPhrase(ph);
                 score.addPart(p);
@@ -195,14 +213,46 @@ public class RiffController implements RiffModel {
         }
     }
 
+
+    @Override
+    public void eventBackspacePressed() {
+        System.out.println(noteCount);
+        if (measureNum > 0 || noteCount > 0){
+            eraseNote();
+            if (noteCount == 0) {
+                noteCount = 4;
+                notesGC.clearRect(84 + measureNum * 140, 30, 3, 64);
+                measureNum--;
+            }
+            noteCount -= noteList.peekLast().getDuration()/(new Note(Note.REST, JMC.QUARTER_NOTE).getDuration());
+            eraseNote();
+            drawNote(1);
+        } else {
+            System.out.println("Cant do that ya fool");
+        }
+    }
+
+
     @Override
     public Score getScore() {
         return null;
     }
 
     @FXML
-    public void tempoAction(ActionEvent e) {
-        tempo = Integer.parseInt(((MenuItem) e.getSource()).getText());
+    public void setTempoAction(ActionEvent e) {
+        score.setTempo(Integer.parseInt(((MenuItem) e.getSource()).getText()));
+    }
+
+    @FXML
+    public void saveAction(ActionEvent e) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Phrase");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Audio Files", "*.midi", "*.mid");
+        fileChooser.getExtensionFilters().addAll(filter);
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
+        if (file != null) {
+            Write.midi(ph, file.getPath());
+        }
     }
 }
 
