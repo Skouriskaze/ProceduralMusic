@@ -10,7 +10,20 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+<<<<<<< HEAD
           <root url="jar://C:/jmusic/jMusic1.6.4.jar!/" />
+=======
+          <root url="jar://$MODULE_DIR$/../../SDK/jMusic1.6.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../SDK/LeapDeveloperKit_2.3.1+31549_win/LeapSDK/lib/LeapJava.jar!/" />
+>>>>>>> MusGenDev
         </CLASSES>
         <JAVADOC />
         <SOURCES />

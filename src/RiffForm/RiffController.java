@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import jm.music.data.Score;
+import jm.util.Play;
 
 public class RiffController implements RiffModel {
     @FXML VBox root;
@@ -119,6 +120,7 @@ public class RiffController implements RiffModel {
     @Override
     public void eventEnterPressed() {
         System.out.println("Enter Pressed!");
+        
         notesGC.clearRect(95 + measureNum * 140 + noteCount * 30, 0, 30, 300);
         notesGC.drawImage(images[currentNote][0], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
         if (currentScale == 7) {
@@ -133,6 +135,7 @@ public class RiffController implements RiffModel {
             staffGC.fillRect(84 + measureNum  * 140, 30, 3, 64);
         }
         notesGC.drawImage(images[currentNote][1], 100 + measureNum * 140 + noteCount * 30, currentScale * 8);
+
     }
 
     @Override
