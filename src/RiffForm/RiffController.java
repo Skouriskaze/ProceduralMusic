@@ -1,6 +1,7 @@
 package RiffForm;
 
 
+import com.leapmotion.leap.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -61,6 +62,9 @@ public class RiffController implements RiffModel {
 
     public void onPress(ActionEvent e) {
         InputListener il = new KeyboardListener(root.getScene());
+        LeapListener il2 = new LeapListener();
+        Controller controller = new Controller();
+        controller.addListener(il2);
         il.addModel(this);
         System.out.println("Button pressed");
         start.setVisible(false);
